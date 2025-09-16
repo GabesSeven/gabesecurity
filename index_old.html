@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Me - Gabriel Ferreira</title>
+
+  <!-- Font Awesome para ícones -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p6Yk4GmJq1k2iA1ZVJtZc1K5Z0C7wz1yVJhFZ3CkRZ+4xHfFv+1+LPXsFPgM7g7UqGZBvXXUHH6yyU5bKc3a3g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    header {
+      background-color: #1f2937;
+      color: #fff;
+      padding: 20px 0;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2em;
+    }
+
+    /* Seção principal com apresentação e menu */
+    .main-section {
+      display: flex;
+      flex-wrap: wrap;
+      max-width: 1000px;
+      margin: 40px auto;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 20px;
+      gap: 20px;
+    }
+
+    .profile {
+      flex: 2;
+      min-width: 250px;
+    }
+
+    .profile img {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .profile h2 {
+      margin-top: 0;
+    }
+
+    .profile a {
+      color: #1f2937;
+      text-decoration: none;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    .profile a:hover {
+      text-decoration: underline;
+    }
+
+    .profile i {
+      margin-right: 5px;
+    }
+
+    /* Menu vertical ao lado */
+    .side-menu {
+      flex: 1;
+      min-width: 150px;
+      background-color: #374151;
+      border-radius: 8px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .side-menu a {
+      color: #fff;
+      text-decoration: none;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 5px;
+    }
+
+    .side-menu a:hover {
+      background-color: #1f2937;
+    }
+
+    @media (max-width: 768px) {
+      .main-section {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .side-menu {
+        flex-direction: row;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+      }
+
+      .side-menu a {
+        margin-bottom: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Gabriel Ferreira</h1>
+  </header>
+
+  <section class="main-section">
+    <!-- Apresentação -->
+    <div class="profile">
+      <img src="assets/profile.jpg" alt="Profile picture">
+      <h2>Hello, I’m Gabriel Ferreira</h2>
+      <p>
+        <strong>Certifications:</strong><br>
+        • CEH Master (ANSI + Practical)<br>
+        • AWS Certified Cloud Practitioner
+      </p>
+      <p>
+        <strong>Education:</strong><br>
+        • MBA Offensive Cybersecurity<br>
+        • B.Sc. Computer Science<br>
+        • Technician in Electronics
+      </p>
+      <p>
+        <a href="https://github.com/GabesSeven" target="_blank">
+          <i class="fab fa-github"></i>GitHub
+        </a>
+        <a href="https://www.linkedin.com/in/gabriel-vieira-ferreira/" target="_blank">
+          <i class="fab fa-linkedin"></i>LinkedIn
+        </a>
+      </p>
+    </div>
+
+    <!-- Menu vertical -->
+    <nav class="side-menu">
+      <a href="#">Protocols</a>
+      <a href="lpda.html">LPDA</a>
+      <a href="#">Methodologies</a>
+    </nav>
+  </section>
+
+</body>
+</html>

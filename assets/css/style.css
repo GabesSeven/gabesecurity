@@ -1,0 +1,138 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  color: #333;
+}
+
+header {
+  background-color: #1f2937;
+  color: #fff;
+  padding: 20px 0;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+}
+
+.main-section {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1000px;
+  margin: 40px auto;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 20px;
+  gap: 20px;
+}
+
+.profile {
+  flex: 2;
+  min-width: 250px;
+}
+
+.profile img {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile h2 {
+  margin-top: 0;
+}
+
+.profile a {
+  color: #1f2937;
+  text-decoration: none;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.profile i {
+  margin-right: 5px;
+}
+
+/* Menu vertical */
+.side-menu {
+  flex: 1;
+  min-width: 150px;
+  background-color: #374151;
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.side-menu .menu-item {
+  margin-bottom: 5px;
+}
+
+.side-menu .menu-title {
+  color: #fff;
+  cursor: pointer;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 5px;
+}
+
+.side-menu .menu-title:hover {
+  background-color: #1f2937;
+}
+
+.side-menu .submenu {
+  display: none;
+  flex-direction: column;
+  margin-top: 5px;
+}
+
+.side-menu .submenu a {
+  color: #fff;
+  padding: 8px 12px;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.side-menu .submenu a:hover {
+  background-color: #1f2937;
+}
+
+/* Submenu */
+.side-menu .submenu a {
+  color: #7fc8ff;       /* Azul claro */
+  font-size: 0.9em;     /* Menor que o texto padrão */
+  padding: 8px 12px;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background 0.2s;
+}
+
+.side-menu .submenu a:hover {
+  background-color: #1f2937;
+  color: #a8d4ff;       /* Azul ainda mais claro no hover */
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .main-section {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .side-menu {
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .side-menu .submenu {
+    position: absolute;
+    background-color: #374151;
+    top: 100%;
+    left: 0;
+    width: 150px;
+  }
+}
