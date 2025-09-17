@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DACL / LDAP</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+  <header>
+    <h1>Discretionary Access Control List (DACL) / Lista de Controle de Permissões de Acesso (LPDA)</h1>
+  </header>
+
+   <div class="content">
+    <h3>LDAP Overview</h3>
+    <p>LDAP (Lightweight Directory Access Protocol) é um protocolo para acessar e gerenciar serviços de diretório, que armazenam informações em uma estrutura hierárquica chamada DIT (Directory Information Tree). Vantagens do LDAP:</p>
+    <ul>
+        <li>Baseado em TCP/IP</li>
+        <li>Permite consultas entre diretórios</li>
+        <li>API em C → fácil integração</li>
+        <li>Suporta Kerberos, SASL, SSL/TLS</li>
+    </ul>
+
+    <h3>Directory Servers</h3>
+    <p>Um servidor de diretório (Directory Server Agent - DSA) funciona como um banco de dados hierárquico:</p>
+    <ul>
+        <li>Relacional → tabelas (linhas e colunas)</li>
+        <li>LDAP → entradas em árvore (DIT)</li>
+    </ul>
+    <pre>
+dc=empresa,dc=com
+├── ou=Usuarios
+│   ├── cn=Joao
+│   └── cn=Maria
+└── ou=Servidores
+    └── cn=FileServer01
+    </pre>
+    <p>Protocolos suportados: LDAP, X.500, DNS, NIS, DSML, SCIM, NDS</p>
+
+    <h4>Nomenclaturas</h4>
+    
+    <ul>
+        <li>UPN (User Principal Name) → user@domain.com</li>
+    </ul>
+
+    <h3>Entradas</h3>
+    <ul>
+        <li><strong>DN (Distinguished Name)</strong> – identifica unicamente a entrada</li>
+        <li><strong>Atributos</strong> – dados associados</li>
+        <li><strong>Object Classes</strong> – definem atributos obrigatórios/opcionais</li>
+    </ul>
+
+    <h3>DNs e RDNs</h3>
+
+    <pre>
+DN: uid=john.doe,ou=People,dc=example,dc=com
+
+RDNs:
+uid=john.doe
+ou=People
+dc=example
+dc=com
+    </pre>
+    <p>Ordem do mais específico para o mais geral.</p>
+    <pre>
+dc=com
+ └── dc=example
+     └── ou=People
+         └── uid=john.doe
+    </pre>
+    <p>Null DN ("") → Root DSE, entrada especial do servidor.</p>
+
+    <h3>LDAP Search Operation</h3>
+    <h4>Base DN</h4>
+    <p>Define onde a busca começa no diretório.</p>
+    <pre>Base DN: DC=empresa,DC=com</pre>
+
+    <h4>Escopos de busca</h4>
+    <ul>
+        <li><span class="highlight">baseObject (“base”)</span>: só busca o próprio objeto</li>
+        <li><span class="highlight">singleLevel (“one”)</span>: busca apenas os filhos imediatos</li>
+        <li><span class="highlight">wholeSubtree (“sub”)</span>: busca toda a subárvore</li>
+        <li><span class="highlight">subordinateSubtree (“subordinates”)</span>: como wholeSubtree, mas ignora o próprio objeto base</li>
+    </ul>
+
+    <h4>Alias Dereferencing</h4>
+    <ul>
+        <li>neverDerefAliases → nunca segue alias</li>
+        <li>derefInSearching → segue apenas aliases encontrados na pesquisa</li>
+        <li>derefFindingBaseObj → só segue se o objeto base for alias</li>
+        <li>derefAlways → sempre segue aliases</li>
+    </ul>
+
+    <h4>Limites da busca</h4>
+    <ul>
+        <li>Size Limit → máximo de entradas retornadas (ex: <code>sizeLimit=1000</code>)</li>
+        <li>Time Limit → máximo de tempo em segundos (ex: <code>timeLimit=30</code>)</li>
+    </ul>
+
+    <h4>TypesOnly flag</h4>
+    <ul>
+        <li>true → retorna somente nomes dos atributos</li>
+        <li>false → retorna atributos com valores</li>
+    </ul>
+    <pre>
+TypesOnly = true:
+dn: CN=Joao,OU=Usuarios,DC=empresa,DC=com
+cn:
+sn:
+mail:
+
+TypesOnly = false:
+dn: CN=Joao,OU=Usuarios,DC=empresa,DC=com
+cn: Joao
+sn: Silva
+mail: joao@empresa.com
+    </pre>
+
+    <h3>Filtros de pesquisa</h3>
+    <p>Exemplo de filtro AND:</p>
+    <pre>(&amp;(objectClass=user)(department=TI))</pre>
+    <ul>
+        <li>Presence → (mail=*)</li>
+        <li>Equality → (uid=john.doe)</li>
+        <li>Substring → (cn=Jo*)</li>
+        <li>>= / <= → (age>=18)</li>
+        <li>Approximate → (cn~=Jon)</li>
+        <li>Extensible → filtros customizados</li>
+    </ul>
+    <p>Operadores lógicos:</p>
+    <ul>
+        <li>AND → (&amp;(objectClass=user)(department=TI))</li>
+        <li>OR → (|(uid=john)(uid=maria))</li>
+        <li>NOT → (!(department=RH))</li>
+    </ul>
+
+    <h3>Atributos solicitados</h3>
+    <ul>
+        <li>"*" → todos atributos de usuário</li>
+        <li>"+" → atributos operacionais</li>
+        <li>"1.1" → nenhum atributo</li>
+        <li>"@inetOrgPerson" → atributos de um objeto classe específico</li>
+    </ul>
+
+    <h3>Modifications (Modify Operation)</h3>
+    <ul>
+        <li>add → adiciona atributo/valores</li>
+        <li>delete → remove valores ou atributo inteiro</li>
+        <li>replace → substitui valores</li>
+        <li>increment → soma/subtrai valores numéricos</li>
+    </ul>
+    <pre>
+dn: uid=john.doe,ou=People,dc=example,dc=com
+changetype: modify
+replace: mail
+mail: john.new@example.com
+    </pre>
+
+    <h3>LDAP URLs</h3>
+    <p>Representam todas as informações necessárias para buscar entradas:</p>
+    <pre>ldap[s]://&lt;host&gt;:&lt;port&gt;/&lt;baseDN&gt;?&lt;attributes&gt;?&lt;scope&gt;?&lt;filter&gt;?&lt;extensions&gt;</pre>
+    <ul>
+        <li><strong>Scheme</strong> → ldap:// ou ldaps:// (SSL/TLS)</li>
+        <li><strong>Host/Port</strong> → Servidor e porta (389 = LDAP, 636 = LDAPS)</li>
+        <li><strong>Base DN</strong> → onde a busca começa</li>
+        <li><strong>Attributes</strong> → atributos a retornar</li>
+        <li><strong>Scope</strong> → base, one, sub</li>
+        <li><strong>Filter</strong> → filtro LDAP</li>
+        <li><strong>Extensions</strong> → opcionais</li>
+    </ul>
+    <pre>
+ldap://ds.example.com:389/dc=example,dc=com?cn,sn,mail?sub?(uid=john.doe)
+
+   ┌───────────── Scheme ──────────────┐
+   │                                   │
+ldap://ds.example.com:389/dc=example,dc=com?cn,sn,mail?sub?(uid=john.doe)
+        │          │        │      │       │
+        │          │        │      │       └── Filter: (uid=john.doe)
+        │          │        │      └── Scope: sub (subárvore)
+        │          │        └── Attributes: cn, sn, mail
+        │          └── Base DN: dc=example,dc=com
+        └── Host: ds.example.com:389
+    </pre>
+
+    <h3>LDAP Schema</h3>
+    <p>Define a estrutura e regras do DIT, semelhante a um banco de dados relacional:</p>
+    <ul>
+        <li>Tabelas → Object Classes</li>
+        <li>Colunas → Attribute Types</li>
+        <li>Tipos de dados → Attribute Syntaxes</li>
+        <li>Restrições → Matching Rules</li>
+    </ul>
+    <h3>Principais elementos</h3>
+    <ul>
+        <li><strong>Attribute Syntaxes</strong> → define tipo de dado</li>
+        <li><strong>Matching Rules</strong> → define como comparar valores</li>
+        <li><strong>Attribute Types</strong> → atributos válidos de um objeto</li>
+        <li><strong>Object Classes</strong> → coleção de atributos (MUST / MAY)</li>
+    </ul>
+    <h3>Elementos adicionais</h3>
+    <ul>
+        <li>Name Forms → restringem atributos usados como RDN</li>
+        <li>DIT Content Rules → atributos obrigatórios/opcionais por tipo</li>
+        <li>DIT Structure Rules → relações hierárquicas</li>
+        <li>Matching Rule Uses → limita atributos para certas regras</li>
+    </ul>
+    <pre>
+objectClass: person
+  MUST: cn, sn
+  MAY: telephoneNumber, userPassword
+
+DIT:
+dc=example,dc=com
+└── uid=john.doe
+     ├── objectClass: person
+     ├── cn: John Doe
+     ├── sn: Doe
+     ├── telephoneNumber: +55 11 99999-0000
+     └── userPassword: secret
+    </pre>
+    <p>Se faltar cn ou sn, a entrada não é válida! 🚫</p>
+
+    <h3>Directory Service (DS)</h3>
+    <p>Repositório hierárquico de objetos (usuários, computadores, impressoras, etc.)</p>
+    <pre>
+[ Directory Service ]
+     ├── User: Alice → email, senha, grupo
+     ├── User: Bob   → email, senha, grupo
+     └── Printer01   → localização, status
+    </pre>
+
+    <h3>Domain Controller (DC)</h3>
+    <p>Servidor com Active Directory Domain Services (AD DS) instalado. Responsável por autenticação, controle de permissões e replicação entre DCs.</p>
+    <pre>
+[Usuário → login]
+       |
+   [Domain Controller]
+       |
+  Valida credenciais (Kerberos)
+       |
+   [Acesso permitido aos recursos]
+    </pre>
+</div>
+</body>
+</html>

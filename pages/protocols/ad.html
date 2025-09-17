@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Active Directory (AD)</title>
+  
+  <!-- CSS externo -->
+  <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+  <header>
+    <h1>Active Directory (AD)</h1>
+  </header>
+
+    <!-- Conteúdo -->
+    <div class="content">
+      <h3>O que é Active Directory?</h3>
+      <p>O <strong>Active Directory (AD)</strong> é um serviço de diretórios da Microsoft que centraliza autenticação e autorização em redes corporativas. Ele funciona como uma base de dados hierárquica que armazena informações sobre usuários, computadores, grupos e recursos da rede.</p>
+
+      <h3>Objetivos principais</h3>
+      <ul>
+        <li><strong>Autenticação:</strong> Verificar identidade de usuários e computadores.</li>
+        <li><strong>Autorização:</strong> Definir o que cada usuário pode acessar.</li>
+        <li><strong>Administração centralizada:</strong> Gerenciar toda a rede em um só lugar.</li>
+        <li><strong>Aplicação de políticas (GPOs):</strong> Controlar segurança e configurações.</li>
+      </ul>
+
+      <h3>Serviços comuns explorados no pentest</h3>
+      <ul>
+        <li><strong>LDAP:</strong> Enumerar usuários, grupos e computadores.</li>
+        <li><strong>Kerberos:</strong> Testar ataques de força bruta ou Pass-the-Ticket.</li>
+        <li><strong>SMB / RPC:</strong> Acessar compartilhamentos e serviços do Windows.</li>
+      </ul>
+
+      <h3>Etapas de exploração do AD em pentest</h3>
+      <ul>
+        <li><strong>Enumeração:</strong> Descobrir usuários, grupos, políticas e computadores.</li>
+        <li><strong>Mapeamento de privilégios:</strong> Ver quem tem acesso a quê.</li>
+        <li><strong>Ataques de credenciais:</strong> Tentativas de adivinhação, extração ou reutilização.</li>
+        <li><strong>Escalada de privilégios: </strong> Subir de usuário comum para administrador.</li>
+        <li><strong>Movimento lateral:</strong> Acessar outros sistemas usando o AD como base.</li>
+      </ul>
+
+      <h3>Estrutura Hierárquica</h3>
+      <pre>
+        Floresta (Forest)
+        └── Domínio (Domain)
+          ├── Árvore de Domínios (Domain Tree)
+          │    └── Domínio Filho (Child Domain)
+          │
+          └── Unidade Organizacional (OU - Organizational Unit)
+            ├── Usuários
+            ├── Grupos
+            └── Computadores
+      </pre>
+
+      <h3>Componentes Técnicos</h3>
+      <ul>
+        <li><strong>Domain Controller (DC):</strong> Servidor que autentica usuários e aplica políticas.</li>
+        <li><strong>Global Catalog (GC):</strong> Banco distribuído para localizar objetos em toda a floresta.</li>
+        <li><strong>FSMO Roles:</strong> Funções críticas de controle do AD.</li>
+        <li><strong>Replicação:</strong> Mantém informações sincronizadas entre DCs.</li>
+        <li><strong>GPOs:</strong> Conjunto de regras aplicadas a usuários/computadores.</li>
+      </ul>
+
+      <h3>Exemplos Práticos</h3>
+
+      <ul>
+        <li><strong>Sem AD:</strong> Cada computador gerencia usuários e senhas localmente.</li>
+        <li><strong>Com AD:</strong> Tudo centralizado, permitindo que qualquer usuário acesse qualquer PC com sua conta de domínio.</li>
+      </ul>
+
+      <pre>
+        Forest Root Domain: corp.local
+        ├── Sites & Subnets
+        │    ├── Site: São_Paulo
+        │    │    └── Subnet: 10.10.10.0/24
+        │    └── Site: New_York
+        │         └── Subnet: 10.20.20.0/24
+        │
+        ├── Domain: corp.local  (Forest root domain)
+        │    ├── DCs:
+        │    │    ├── DC1-SP (dc1.corp.local)  - Global Catalog, FSMO: Schema, Naming
+        │    │    └── DC2-NY (dc2.corp.local)  - Global Catalog
+        │    ├── OUs:
+        │    │    ├── OU: Domain Controllers
+        │    │    ├── OU: Enterprise Admins (contém grupos privilegiados)
+        │    │    ├── OU: Service Accounts
+        │    │    └── OU: Infrastructure
+        │    ├── Groups:
+        │    │    └── Group: Corp-Domain-Admins
+        │    └── GPOs:
+        │         ├── Default Domain Policy (senha, kerberos ticket lifetime)
+        │         └── Baseline-Security (password complexity, audit policy)
+        │
+        ├── Domain: brasil.corp.local
+        │    ├── DCs:
+        │    │    ├── BR-DC1 (br-dc1.brasil.corp.local)
+        │    │    └── BR-DC2 (br-dc2.brasil.corp.local)
+        │    ├── Sites & Subnets:
+        │    │    └── Site: Brasil (Subnet 192.168.1.0/24)
+        │    ├── OUs:
+        │    │    ├── OU: Financeiro
+        │    │    │    ├── Users:
+        │    │    │    │    ├── usu_fin_ana (Ana Santos)
+        │    │    │    │    └── usu_fin_ricardo (Ricardo Lima)
+        │    │    │    └── Groups:
+        │    │    │         └── Grupo: Finance-Approvers
+        │    │    ├── OU: Marketing
+        │    │    │    ├── usu_mkt_paula (Paula)
+        │    │    │    └── usu_mkt_carlos (Carlos)
+        │    │    ├── OU: Shared-Folders (computers with file shares)
+        │    │    └── OU: Computers
+        │    │         ├── PC-ANA
+        │    │         └── NOTEBOOK-RICARDO
+        │    ├── Servers:
+        │    │    ├── SRV-FINANCE (arquivo e aplicações financeiras)
+        │    │    └── SRV-EXCHANGE-BR
+        │    └── GPOs:
+        │         ├── GPO-Finance-DataProtection (DLP / drive restrictions)
+        │         └── GPO-Marketing-Redirects
+        │
+        └── Domain: usa.corp.local
+            ├── DCs:
+            │    ├── US-DC1 (us-dc1.usa.corp.local)
+            │    └── US-DC2 (us-dc2.usa.corp.local)
+            ├── Sites & Subnets:
+            │    └── Site: USA (Subnet 172.16.0.0/16)
+            ├── OUs:
+            │    ├── OU: TI
+            │    │    ├── Users:
+            │    │    │    ├── alice (Alice Johnson)
+            │    │    │    └── bob (Bob Smith)
+            │    │    └── Groups:
+            │    │         └── Admins_TI
+            │    ├── OU: Suporte
+            │    └── OU: Computers
+            │         ├── PC-ALICE
+            │         └── PC-BOB
+            ├── Servers:
+            │    ├── SRV-AZURE-GW (gateway para serviços cloud)
+            │    └── SRV-FS-US (file server)
+            └── GPOs:
+                  ├── GPO-TI-Admins (restrições e direitos administrativos)
+                  └── GPO-Workstation-Hardening
+      </pre>
+    </div>
+</body>
+</html>

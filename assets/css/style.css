@@ -6,15 +6,17 @@ body {
 }
 
 header {
-  background-color: #1f2937;
-  color: #fff;
-  padding: 20px 0;
+  background: linear-gradient(90deg, #1f2937, #374151);
   text-align: center;
+  padding: 40px 20px;
 }
 
 header h1 {
+  font-size: 2.2em;
   margin: 0;
+  color: #f9fafb;
 }
+
 
 .main-section {
   display: flex;
@@ -135,4 +137,63 @@ header h1 {
     left: 0;
     width: 150px;
   }
+}
+
+@media (max-width: 600px) {
+  body {
+    font-size: 0.95em;
+  }
+  h1 {
+    font-size: 1.5em;
+  }
+  pre {
+    font-size: 0.8em;
+  }
+}
+
+pre {
+  background: #1e293b;       /* Azul escuro */
+  color: #e2e8f0;           /* Cinza claro */
+  padding: 15px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-family: "Courier New", monospace;
+  font-size: 0.9em;
+  line-height: 1.5em;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
+}
+
+ul {
+  list-style: none;  /* remove a bolinha padrão */
+  padding-left: 0;   /* opcional: remove indentação extra */
+}
+
+ul li {
+  margin: 8px 0;
+  padding-left: 25px;
+  position: relative;
+}
+
+ul li::before {
+  content: "✔";            
+  position: absolute;
+  left: 0;
+  color: #3b82f6;          
+  font-weight: bold;
+}
+
+h3 {
+  border-left: 5px solid #3b82f6;
+  padding-left: 10px;
+  margin-top: 30px;
+  color: #1f2937;
+}
+
+.content {
+  max-width: 900px;
+  margin: 20px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
